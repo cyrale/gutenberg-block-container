@@ -10,7 +10,13 @@ import './style.scss';
 import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { getBlockDefaultClassName, registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { Fragment } = wp.element;
+const { BlockAlignmentToolbar, BlockControls, InnerBlocks } = wp.editor;
+
+import classnames from 'classnames';
+
+const name = 'gutenberg-block/container';
 
 /**
  * Register: aa Gutenberg Block.
@@ -25,7 +31,7 @@ const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.b
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType( 'gutenberg-block/container', {
+registerBlockType( name, {
 	title: __( 'Container' ),
 
 	icon: (
@@ -42,6 +48,25 @@ registerBlockType( 'gutenberg-block/container', {
 
 	keywords: [ __( 'Container' ), __( 'Layout' ) ],
 
+	supports: {
+		html: false,
+	},
+
+	align: {
+		type: 'string',
+	},
+
+	getEditWrapperProps( attributes ) {
+		const { align } = attributes;
+		const props = {};
+
+		if ( 'full' === align || 'wide' === align ) {
+			props[ 'data-align' ] = align;
+		}
+
+		return props;
+	},
+
 	/**
 	 * The edit function describes the structure of your block in the context of the editor.
 	 * This represents what the editor will render when the block is used.
@@ -55,21 +80,24 @@ registerBlockType( 'gutenberg-block/container', {
 	 * @return {Component} Rendered component.
 	 */
 	edit: props => {
-		// Creates a <p class='wp-block-cgb-block-gutenberg-block-container'></p>.
+		const { attributes, setAttributes } = props;
+		const { align } = attributes;
+
 		return (
-			<div className={ props.className }>
-				<p>— Hello from the backend.</p>
-				<p>
-					CGB BLOCK: <code>gutenberg-block-container</code> is a new Gutenberg block
-				</p>
-				<p>
-					It was created via{ ' ' }
-					<code>
-						<a href="https://github.com/ahmadawais/create-guten-block">create-guten-block</a>
-					</code>
-					.
-				</p>
-			</div>
+			<Fragment>
+				<BlockControls>
+					<BlockAlignmentToolbar
+						controls={ [ 'full', 'wide' ] }
+						value={ align }
+						onChange={ newAlign => setAttributes( { align: newAlign } ) }
+					/>
+				</BlockControls>
+				<div className={ classnames( getBlockDefaultClassName( name ), 'block-container' ) } data-align={ align }>
+					<div className="">
+						<InnerBlocks />
+					</div>
+				</div>
+			</Fragment>
 		);
 	},
 
@@ -85,20 +113,12 @@ registerBlockType( 'gutenberg-block/container', {
 	 *
 	 * @return {Component} Rendered component.
 	 */
-	save: () => {
+	save: ( { attributes: { align } } ) => {
 		return (
-			<div>
-				<p>— Hello from the frontend.</p>
-				<p>
-					CGB BLOCK: <code>gutenberg-block-container</code> is a new Gutenberg block.
-				</p>
-				<p>
-					It was created via{ ' ' }
-					<code>
-						<a href="https://github.com/ahmadawais/create-guten-block">create-guten-block</a>
-					</code>
-					.
-				</p>
+			<div className="block-container" data-align={ align }>
+				<div className="block-container__wrapper">
+					<InnerBlocks.Content />
+				</div>
 			</div>
 		);
 	},
