@@ -10,13 +10,14 @@ import './style.scss';
 import './editor.scss';
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { getBlockDefaultClassName, registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
-const { Fragment } = wp.element;
-const { BlockAlignmentToolbar, BlockControls, InnerBlocks } = wp.editor;
+const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
+const { InnerBlocks, getColorClassName } = wp.editor;
 
 import classnames from 'classnames';
 
-const name = 'gutenberg-block/container';
+import edit from './block-edit';
+
+export const name = 'gutenberg-block/container';
 
 /**
  * Register: aa Gutenberg Block.
@@ -52,8 +53,13 @@ registerBlockType( name, {
 		html: false,
 	},
 
-	align: {
-		type: 'string',
+	attributes: {
+		align: {
+			type: 'string',
+		},
+		backgroundColor: {
+			type: 'string',
+		},
 	},
 
 	getEditWrapperProps( attributes ) {
@@ -79,27 +85,7 @@ registerBlockType( name, {
 	 *
 	 * @return {Component} Rendered component.
 	 */
-	edit: props => {
-		const { attributes, setAttributes } = props;
-		const { align } = attributes;
-
-		return (
-			<Fragment>
-				<BlockControls>
-					<BlockAlignmentToolbar
-						controls={ [ 'full', 'wide' ] }
-						value={ align }
-						onChange={ newAlign => setAttributes( { align: newAlign } ) }
-					/>
-				</BlockControls>
-				<div className={ classnames( getBlockDefaultClassName( name ), 'block-container' ) } data-align={ align }>
-					<div className="">
-						<InnerBlocks />
-					</div>
-				</div>
-			</Fragment>
-		);
-	},
+	edit,
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -113,9 +99,20 @@ registerBlockType( name, {
 	 *
 	 * @return {Component} Rendered component.
 	 */
-	save: ( { attributes: { align } } ) => {
+	save: ( { attributes: { align, backgroundColor, customBackgroundColor } } ) => {
+		const backgroundClass = getColorClassName( 'background-color', backgroundColor );
+
+		const containerClasses = classnames( 'block-container', {
+			'has-background': backgroundColor || customBackgroundColor,
+			[ backgroundClass ]: backgroundClass,
+		} );
+
+		const containerStyle = {
+			backgroundColor: backgroundClass ? undefined : customBackgroundColor,
+		};
+
 		return (
-			<div className="block-container" data-align={ align }>
+			<div className={ containerClasses } data-align={ align } style={ containerStyle }>
 				<div className="block-container__wrapper">
 					<InnerBlocks.Content />
 				</div>

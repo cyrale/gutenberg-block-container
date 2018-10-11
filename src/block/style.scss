@@ -5,4 +5,7 @@
  */
 
 .wp-block-gutenberg-block-container  {
+  &.has-background {
+	padding: 20px 30px;
+  }
 }
