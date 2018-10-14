@@ -20,12 +20,6 @@
     "source": "https://github.com/cyrale/gutenberg-block-container"
   },
   "type": "wordpress-plugin",
-  "autoload": {
-    "classmap": [
-      "plugin.php",
-      "src/"
-    ]
-  },
   "require": {
     "yahnis-elsts/plugin-update-checker": "^4.4"
   },
