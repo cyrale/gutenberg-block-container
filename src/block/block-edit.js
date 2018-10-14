@@ -1,17 +1,8 @@
 /**
- * BLOCK: gutenberg-block-container
- *
- * Registering a basic block with Gutenberg.
- * Simple block, renders and saves the same content without any interactivity.
+ * WordPress dependencies
  */
-
-//  Import CSS.
-import './style.scss';
-import './editor.scss';
-
 const { compose } = wp.compose;
 const { __ } = wp.i18n; // Import __() from wp.i18n
-const { getBlockDefaultClassName } = wp.blocks; // Import registerBlockType() from wp.blocks
 const { Component, Fragment } = wp.element;
 const {
 	BlockAlignmentToolbar,
@@ -22,13 +13,14 @@ const {
 	withColors,
 } = wp.editor;
 
+/**
+ * External dependencies
+ */
 import classnames from 'classnames';
-
-import { name } from './block';
 
 class BlockEdit extends Component {
 	render() {
-		const { attributes, backgroundColor, setBackgroundColor, setAttributes } = this.props;
+		const { attributes, backgroundColor, className, setBackgroundColor, setAttributes } = this.props;
 		const { align } = attributes;
 
 		return (
@@ -53,7 +45,7 @@ class BlockEdit extends Component {
 					/>
 				</BlockControls>
 				<div
-					className={ classnames( getBlockDefaultClassName( name ), 'block-container', {
+					className={ classnames( className, 'block-container', {
 						'has-background': backgroundColor.color,
 						[ backgroundColor.class ]: backgroundColor.class,
 					} ) }
