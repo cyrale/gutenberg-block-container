@@ -63,3 +63,21 @@ function gutenberg_block_container_editor_assets() {
 
 // Hook: Editor assets.
 add_action( 'enqueue_block_editor_assets', 'gutenberg_block_container_editor_assets' );
+
+/**
+ * Add the current block in the white list.
+ *
+ * @param array $blocks White listed blocks.
+ *
+ * @return array New list with the current block inside.
+ */
+function gutenberg_block_container_default_blocks( $blocks ) {
+	if ( ! in_array( 'gutenberg-block/container', $blocks, true ) ) {
+		$blocks[] = 'gutenberg-block/container';
+	}
+
+	return $blocks;
+}
+
+// Hook: Default blocks.
+add_filter( 'gutenberg_basics_default_blocks', 'gutenberg_block_container_default_blocks' );
