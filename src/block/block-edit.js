@@ -39,7 +39,7 @@ class BlockEdit extends Component {
 				</InspectorControls>
 				<BlockControls>
 					<BlockAlignmentToolbar
-						controls={ [ 'full', 'wide' ] }
+						controls={ [ 'wide', 'full' ] }
 						value={ align }
 						onChange={ newAlign => setAttributes( { align: newAlign } ) }
 					/>
