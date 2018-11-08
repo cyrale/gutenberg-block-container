@@ -1,4 +1,4 @@
-# Gutenberg Block - Carousel #
+# Gutenberg Block - Container #
 **Contributors:**      Cyrale  
 **Tags:**              WordPress, Plugin, Gutenberg, Container  
 **Requires at least:** 4.9  
